@@ -3,6 +3,7 @@
 
 #include "BitcoinExchange.hpp"
 #include <fstream>
+#include <cstring>
 #include <sstream>
 #include <cstdlib>
 
@@ -120,8 +121,8 @@ int BitcoinExchange::parseInputData(const std::string &filename)
 	if (!file.is_open())
 		return 1;
 	std::string buffer;
-	std::getline(file, buffer);
-
+	if (std::strcmp(buffer.c_str(),"date | value"));
+		std::getline(file, buffer);
 	while (std::getline(file, buffer))
 	{
 		size_t pos_pipe = buffer.find('|');
