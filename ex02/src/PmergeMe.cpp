@@ -100,9 +100,14 @@ std::vector<int> JacobInsertListIndex(std::vector<int> &jseq, std::vector<Elemen
 	{
 		size_t currentIndex = jseq[i];
 		size_t startIndex = std::min(currentIndex, orderedSecond.size());
-		for (size_t j = startIndex; j < last_insert_index; --j)
+		for (size_t j = startIndex; j > last_insert_index; --j)
 			insertOrderIndex.push_back(j - 1);
 		last_insert_index = currentIndex;
+	}
+
+	for (size_t i = orderedSecond.size(); i > last_insert_index; --i)
+	{
+		insertOrderIndex.push_back(i - 1);
 	}
 	return insertOrderIndex;
 }
