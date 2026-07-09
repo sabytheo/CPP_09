@@ -62,10 +62,10 @@ std::vector<int> PmergeMe::Jacob(int size)
 	}
 	return (sequence);
 }
-
-std::vector<Element> MirrorIndexFirstCmp(std::vector<Element> &main, std::vector<Element> &second, std::vector<std::pair<int, int> > &idPairs)
+template <typename container>
+container MirrorIndexFirstCmp(container &main, container &second, std::vector<std::pair<int, int> > &idPairs)
 {
-	std::vector<Element> orderedSecond;
+	container orderedSecond;
 	for (size_t i = 0; i < main.size(); ++i)
 	{
 		int idA = main[i].id;
@@ -91,7 +91,8 @@ std::vector<Element> MirrorIndexFirstCmp(std::vector<Element> &main, std::vector
 	}
 	return (orderedSecond);
 }
-std::vector<int> JacobInsertListIndex(std::vector<int> &jseq, std::vector<Element> orderedSecond)
+template <typename container>
+std::vector<int> JacobInsertListIndex(std::vector<int> &jseq, container orderedSecond)
 {
 	std::vector<int> insertOrderIndex;
 
@@ -112,7 +113,8 @@ std::vector<int> JacobInsertListIndex(std::vector<int> &jseq, std::vector<Elemen
 	return insertOrderIndex;
 }
 
-void BinaryInsert(std::vector<int> &insertOrderIndex, std::vector<Element> &main, std::vector<Element> &orderedSecond, std::vector<std::pair<int, int> > &idPairs)
+template <typename container>
+void BinaryInsert(std::vector<int> &insertOrderIndex, container &main, container &orderedSecond, std::vector<std::pair<int, int> > &idPairs)
 {
 	for (size_t i = 0; i < insertOrderIndex.size(); ++i)
 	{
@@ -126,8 +128,8 @@ void BinaryInsert(std::vector<int> &insertOrderIndex, std::vector<Element> &main
 				break;
 			}
 		}
-		std::vector<Element>::iterator limit = main.end();
-		for (std::vector<Element>::iterator it = main.begin(); it != main.end(); ++it)
+		typename container::iterator limit = main.end();
+		for (typename container::iterator it = main.begin(); it != main.end(); ++it)
 		{
 			if (it->id == idA)
 			{
@@ -135,18 +137,18 @@ void BinaryInsert(std::vector<int> &insertOrderIndex, std::vector<Element> &main
 				break;
 			}
 		}
-		std::vector<Element>::iterator pos = std::lower_bound(main.begin(), limit, target, compareElements);
+		typename container::iterator pos = std::lower_bound(main.begin(), limit, target, compareElements);
 		main.insert(pos, target);
 	}
 }
-
-void PmergeMe::sortVectorImpl(std::vector<Element> &array)
+template <typename container>
+void PmergeMe::sortImpl(container& array)
 {
 	if (array.size() <= 1)
 		return;
 
-	std::vector<Element> main;
-	std::vector<Element> second;
+	container main;
+	container second;
 	std::vector<std::pair<int, int> > idPairs;
 
 	Element odd;
@@ -175,8 +177,8 @@ void PmergeMe::sortVectorImpl(std::vector<Element> &array)
 			isOdd = true;
 		}
 	}
-	sortVectorImpl(main);
-	std::vector<Element> orderedSecond = MirrorIndexFirstCmp(main, second, idPairs);
+	sortImpl(main);
+	container orderedSecond = MirrorIndexFirstCmp(main, second, idPairs);
 	if (!orderedSecond.empty())
 		main.insert(main.begin(), orderedSecond[0]);
 	std::vector<int> jseq = Jacob(orderedSecond.size());
@@ -184,7 +186,7 @@ void PmergeMe::sortVectorImpl(std::vector<Element> &array)
 	BinaryInsert(insertOrderIndex, main, orderedSecond, idPairs);
 	if (isOdd)
 	{
-		std::vector<Element>::iterator pos = std::lower_bound(main.begin(), main.end(), odd, compareElements);
+		typename container::iterator pos = std::lower_bound(main.begin(), main.end(), odd, compareElements);
 		main.insert(pos, odd);
 	}
 	array = main;
@@ -202,18 +204,52 @@ void PmergeMe::exec()
 	}
 	struct timeval start, end;
 	gettimeofday(&start, NULL);
-	sortVectorImpl(vecElements);
+	sortImpl(vecElements);
 	gettimeofday(&end, NULL);
-	double timeVec = (end.tv_sec - start.tv_sec) * 1000000.0 + (end.tv_usec - start.tv_usec);
+	this->_vectorTime = (end.tv_sec - start.tv_sec) * 1000000.0 + (end.tv_usec - start.tv_usec);
 	for (size_t i = 0; i < vecElements.size(); ++i)
 		this->_vector[i] = vecElements[i].value;
 
-	std::cout << "Time to process a range of " << this->_vector.size() << " elements with std::vector : " << timeVec << " us" << std::endl;
+	// std::cout << "Time to process a range of " << this->_vector.size() << " elements with std::vector : " << timeVec << " us" << std::endl;
+
+
+	std::deque<Element> deqElements;
+	for (size_t i = 0; i < this->_deque.size(); ++i)
+	{
+		Element e;
+		e.value = this->_deque[i];
+		e.id = i;
+		deqElements.push_back(e);
+	}
+	gettimeofday(&start, NULL);
+	sortImpl(deqElements);
+	gettimeofday(&end, NULL);
+	this->_dequeTime = (end.tv_sec - start.tv_sec) * 1000000.0 + (end.tv_usec - start.tv_usec);
+
+	for (size_t i = 0; i < deqElements.size(); ++i)
+		this->_deque[i] = deqElements[i].value;
+
+	// std::cout << "Time to process a range of " << this->_deque.size() << " elements with std::deque : " << timeVec << " us" << std::endl;
+}
+
+double PmergeMe::getTimeVector() const
+{
+	return (this->_vectorTime);
+}
+
+double PmergeMe::getTimeDeque() const
+{
+	return (this->_dequeTime);
 }
 
 const std::vector<int> &PmergeMe::getVector() const
 {
 	return (this->_vector);
+}
+
+const std::deque<int> &PmergeMe::getDeque() const
+{
+	return (this->_deque);
 }
 
 PmergeMe::~PmergeMe() {}

@@ -20,6 +20,8 @@ class PmergeMe
 	private :
 		std::vector<int> _vector;
 		std::deque<int> _deque;
+		double _vectorTime;
+		double _dequeTime;
 
 	public :
 		PmergeMe();
@@ -29,13 +31,16 @@ class PmergeMe
 
 
 		std::vector<int> Jacob(int size);
-		void sortVectorImpl(std::vector<Element>& array);
-		// void sortDequeImpl(std::vector<Element>& array);
-
+		template <typename container>
+		void sortImpl(container& array);
 		int parseArg(int argc, char **argv);
 		void exec();
 
+		const std::deque<int>& getDeque() const;
 		const std::vector<int>& getVector() const;
+
+		double getTimeVector() const;
+		double getTimeDeque() const;
 };
 
 #endif
