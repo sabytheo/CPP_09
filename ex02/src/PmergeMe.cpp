@@ -12,6 +12,10 @@ PmergeMe &PmergeMe::operator=(const PmergeMe &other)
 {
 	if (this != &other)
 	{
+		this->_vector = other._vector;
+		this->_deque = other._deque;
+		this->_dequeTime = other._dequeTime;
+		this->_vectorTime = other._vectorTime;
 	}
 	return (*this);
 }

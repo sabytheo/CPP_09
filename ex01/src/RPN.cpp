@@ -29,7 +29,7 @@ RPN &RPN::operator=(const RPN &other)
 void RPN::doOper(char oper)
 {
 	if (this->_containers.size() < 2)
-		throw std::runtime_error("Too few numbers");
+		throw std::runtime_error("Error: To few numbers");
 	int val2 = this->_containers.top();
 	this->_containers.pop();
 	int val1 = this->_containers.top();
@@ -48,11 +48,11 @@ void RPN::doOper(char oper)
 			break;
 		case '/':
 			if ( val2 == 0)
-				throw std::runtime_error("can't divide by 0");
+				throw std::runtime_error("Error: Can't divide by 0");
 			res = val1 / val2;
 			break;
 		default:
-			throw std::runtime_error("CACA");
+			throw std::runtime_error("Error: Unknown operator");
 	}
 	this->_containers.push(res);
 }
@@ -69,10 +69,10 @@ void RPN::doCalc(const std::string& str)
 		else if ( c == '+' || c == '-' || c == '*' || c == '/')
 			this->doOper(c);
 		else
-			throw std::runtime_error("BAD CHAR");
+			throw std::runtime_error("Error: Bad char");
 	}
 	if (this->_containers.size() != 1)
-		throw std::runtime_error("Only number between 0 and 9 are valid on args");
+		throw std::runtime_error("Error: invalid expression");
 	std::cout << this->_containers.top() << std::endl ;
 }
 

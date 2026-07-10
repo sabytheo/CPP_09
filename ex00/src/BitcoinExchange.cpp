@@ -45,11 +45,11 @@ bool BitcoinExchange::isValidDate(const std::string &date) const
 	std::string day = date.substr(8, 2);
 
 	int Y = std::atoi(year.c_str());
-	if (Y < 2008 || Y > 2026)
-	{
-		std::cout << "Error : year must be between 2008 and 2026" << std::endl;
-		return false;
-	}
+	// if (Y < 2008 || Y > 2026)
+	// {
+	// 	std::cout << "Error : year must be between 2008 and 2026" << std::endl;
+	// 	return false;
+	// }
 	int M = std::atoi(month.c_str());
 	if (M < 1 || M > 12)
 	{
