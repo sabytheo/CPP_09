@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 	sorter.exec();
 
 	const std::vector<int> &sortedVec = sorter.getVector();
-	std::cout << "After Vec:  " << std::endl;
+	std::cout << "After :  ";
 	for (size_t i = 0; i < sortedVec.size(); ++i)
 	{
 		std::cout << sortedVec[i] << " ";
@@ -31,7 +31,7 @@ int main(int argc, char **argv)
 	std::cout << std::endl;
 
 	const std::deque<int> &sortedDeq = sorter.getDeque();
-	// std::cout << "After Deq:  " << std::endl;
+	// std::cout << "After Deq:  ";
 	// for (size_t i = 0; i < sortedDeq.size(); ++i)
 	// {
 	// 	std::cout << sortedDeq[i] << " ";
